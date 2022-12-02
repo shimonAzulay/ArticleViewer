@@ -10,7 +10,9 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   
   var window: UIWindow?
-  var coordinator: AppCoordinator?
+  var coordinator: Coordinator?
+  var sessionManager: SessionManager?
+  var keychainManager: KeychainManager?
   
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -20,12 +22,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     window = UIWindow(windowScene: windowScene)
     
-    let coordinator = AppCoordinator()
-    let mainVC = AppScreen.login.make(withCoordinator: coordinator)
-    let rootNC = UINavigationController(rootViewController: mainVC)
-    rootNC.view.backgroundColor = .white
+    let keychainManager = AppKeychainManager()
+    let networkManager = ArticleViewerNetworkManager()
+    let sessionManager = ArticleViewerSessionManager(networkManager: networkManager,
+                                                     keychainManager: keychainManager)
+    let coordinator = AppCoordinator(sessionManager: sessionManager)
+    let rootVC = UserSessionLoaderViewContoller(coordinator: coordinator,
+                                                sessionManager: sessionManager)
+    let rootNC = UINavigationController(rootViewController: rootVC)
     coordinator.navigationController = rootNC
-    
+    self.sessionManager = sessionManager
     window?.rootViewController = rootNC
     window?.makeKeyAndVisible()
   }

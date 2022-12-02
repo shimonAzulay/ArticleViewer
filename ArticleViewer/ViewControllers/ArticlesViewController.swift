@@ -25,23 +25,42 @@ class ArticlesViewController: UIViewController {
     }
   }
   
-  var coordinator: Coordinator?
+  let coordinator: Coordinator
+  let sessionManager: SessionManager
+  
+  init(coordinator: Coordinator,
+       sessionManager: SessionManager) {
+    self.coordinator = coordinator
+    self.sessionManager = sessionManager
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationItem.title = "Articles"
     navigationItem.rightBarButtonItem  = logoutButton
+    view.backgroundColor = .white
     setupTableView()
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    articles = [Article(title: "AAA", summary: "AAAAA AAAAA", description: "AAAAA AAAAA AAAAA AAAAA AAAAA AAAAA AAAAA AAAAA AAAAA AAAAA AAAAA AAAAA", date: .now),
-                Article(title: "BBBBB", summary: "BBBBB BBBBB", description: "BBBBB BBBBB BBBBB BBBBB BBBBB BBBBB BBBBB BBBBB BBBBB", date: .now)]
+    Task { [weak self] in
+      do {
+        self?.articles = try await sessionManager.fetchArticles()
+      } catch {
+        print(error)
+      }
+    }
   }
   
   @objc func logoutButtonTapped() {
-    coordinator?.show(screen: .login)
+    sessionManager.logout()
+    coordinator.show(screen: .login)
   }
 }
 
@@ -62,7 +81,7 @@ private extension ArticlesViewController {
 extension ArticlesViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let article = articles[indexPath.row]
-    coordinator?.push(screen: .article(article))
+    coordinator.push(screen: .article(article))
   }
 }
 

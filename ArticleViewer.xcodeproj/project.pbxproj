@@ -19,6 +19,11 @@
 		9F4A04CC2938F9BB00FEE562 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4A04CB2938F9BB00FEE562 /* LoginViewController.swift */; };
 		9F4A04CE2938F9EF00FEE562 /* ArticlesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4A04CD2938F9EF00FEE562 /* ArticlesViewController.swift */; };
 		9F4A04D02938FA0300FEE562 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F4A04CF2938FA0300FEE562 /* ArticleViewController.swift */; };
+		9FBCC6832939DAD100188856 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC6822939DAD100188856 /* SessionManager.swift */; };
+		9FBCC6852939DADE00188856 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC6842939DADE00188856 /* NetworkManager.swift */; };
+		9FBCC68A2939F05F00188856 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC6892939F05F00188856 /* Login.swift */; };
+		9FBCC68C293A30F300188856 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC68B293A30F300188856 /* KeychainManager.swift */; };
+		9FBCC68E293A3BFF00188856 /* UserSessionLoaderViewContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC68D293A3BFF00188856 /* UserSessionLoaderViewContoller.swift */; };
 		9FDD3EC3293929470023C8EC /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDD3EC2293929470023C8EC /* Article.swift */; };
 		9FDD3EC5293929FC0023C8EC /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDD3EC4293929FC0023C8EC /* ArticleTableViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -57,6 +62,11 @@
 		9F4A04CB2938F9BB00FEE562 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		9F4A04CD2938F9EF00FEE562 /* ArticlesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesViewController.swift; sourceTree = "<group>"; };
 		9F4A04CF2938FA0300FEE562 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
+		9FBCC6822939DAD100188856 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		9FBCC6842939DADE00188856 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		9FBCC6892939F05F00188856 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		9FBCC68B293A30F300188856 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		9FBCC68D293A3BFF00188856 /* UserSessionLoaderViewContoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionLoaderViewContoller.swift; sourceTree = "<group>"; };
 		9FDD3EC2293929470023C8EC /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		9FDD3EC4293929FC0023C8EC /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,6 +119,7 @@
 		9F0BFE722938F33B002E2C8D /* ArticleViewer */ = {
 			isa = PBXGroup;
 			children = (
+				9FBCC6812939DAB000188856 /* Managers */,
 				9F0BFEA52938F35F002E2C8D /* ViewControllers */,
 				9F0BFEA42938F359002E2C8D /* Models */,
 				9F0BFEA32938F34B002E2C8D /* Coordinator */,
@@ -151,6 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				9FDD3EC2293929470023C8EC /* Article.swift */,
+				9FBCC6892939F05F00188856 /* Login.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -158,12 +170,23 @@
 		9F0BFEA52938F35F002E2C8D /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				9FBCC68D293A3BFF00188856 /* UserSessionLoaderViewContoller.swift */,
 				9F4A04CB2938F9BB00FEE562 /* LoginViewController.swift */,
 				9F4A04CD2938F9EF00FEE562 /* ArticlesViewController.swift */,
 				9FDD3EC4293929FC0023C8EC /* ArticleTableViewCell.swift */,
 				9F4A04CF2938FA0300FEE562 /* ArticleViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		9FBCC6812939DAB000188856 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				9FBCC6822939DAD100188856 /* SessionManager.swift */,
+				9FBCC6842939DADE00188856 /* NetworkManager.swift */,
+				9FBCC68B293A30F300188856 /* KeychainManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -300,10 +323,15 @@
 				9FDD3EC5293929FC0023C8EC /* ArticleTableViewCell.swift in Sources */,
 				9F0BFEA92938F3B6002E2C8D /* Coordinator.swift in Sources */,
 				9F4A04D02938FA0300FEE562 /* ArticleViewController.swift in Sources */,
+				9FBCC68C293A30F300188856 /* KeychainManager.swift in Sources */,
+				9FBCC6852939DADE00188856 /* NetworkManager.swift in Sources */,
+				9FBCC68A2939F05F00188856 /* Login.swift in Sources */,
 				9F0BFE762938F33B002E2C8D /* SceneDelegate.swift in Sources */,
 				9FDD3EC3293929470023C8EC /* Article.swift in Sources */,
 				9F4A04CE2938F9EF00FEE562 /* ArticlesViewController.swift in Sources */,
 				9F4A04CC2938F9BB00FEE562 /* LoginViewController.swift in Sources */,
+				9FBCC6832939DAD100188856 /* SessionManager.swift in Sources */,
+				9FBCC68E293A3BFF00188856 /* UserSessionLoaderViewContoller.swift in Sources */,
 				9F0BFEA72938F38C002E2C8D /* AppScreens.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -51,18 +51,45 @@ class ArticleViewController: UIViewController {
     return articleDescription
   }()
   
-  var article: Article?
+  var articleContent: String? {
+    didSet {
+      DispatchQueue.main.async { [weak self] in
+        self?.populate()
+      }
+    }
+  }
+  
+  let article: Article
+  let sessionManager: SessionManager
+  
+  init(article: Article,
+       sessionManager: SessionManager) {
+    self.article = article
+    self.sessionManager = sessionManager
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    navigationItem.title = article?.title
+    navigationItem.title = article.title
+    view.backgroundColor = .white
     setup()
-    populate()
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    // populate()
+    Task { [weak self] in
+      do {
+        let articleDetails = try await sessionManager.fetchArticleDetails(articleId: article.id)
+        self?.articleContent = articleDetails.content
+      } catch {
+        print(error)
+      }
+    }
   }
 }
 
@@ -73,13 +100,14 @@ private extension ArticleViewController {
     scrollView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
     scrollView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
     scrollView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor).isActive = true
-    scrollView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9).isActive = true
+    scrollView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
     
     scrollView.addSubview(containerView)
     containerView.translatesAutoresizingMaskIntoConstraints = false
     containerView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
     containerView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-    containerView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+    containerView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+    containerView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9).isActive = true
     
     containerView.addArrangedSubview(articleImage)
     containerView.addArrangedSubview(articleTitle)
@@ -88,10 +116,9 @@ private extension ArticleViewController {
   }
   
   func populate() {
-    guard let article else { return }
-    articleImage.image = UIImage(named: "loginScreenImage")
+    guard let articleContent else { return }
     articleTitle.text = article.title
-    articleDate.text = article.date.asString
-    articleDescription.text = article.description
+    articleDate.text = article.date
+    articleDescription.text = articleContent
   }
 }

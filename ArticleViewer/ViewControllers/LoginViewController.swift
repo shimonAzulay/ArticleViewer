@@ -33,10 +33,11 @@ class LoginViewController: UIViewController {
   }()
   
   
-  private lazy var userNameTextField: UITextField = {
+  private lazy var usernameTextField: UITextField = {
     let textField = UITextField()
     textField.backgroundColor = .lightGray
     textField.placeholder = "Username"
+    textField.text = "code"
     textField.layer.cornerRadius = 5
     textField.addTarget(self, action: #selector(userNameTextFieldDidEnd), for: .editingChanged)
     return textField
@@ -46,6 +47,7 @@ class LoginViewController: UIViewController {
     let textField = UITextField()
     textField.backgroundColor = .lightGray
     textField.placeholder = "Password"
+    textField.text = "test"
     textField.layer.cornerRadius = 5
     textField.isSecureTextEntry = true
     textField.addTarget(self, action: #selector(passwordTextFieldDidEnd), for: .editingChanged)
@@ -59,7 +61,19 @@ class LoginViewController: UIViewController {
     return loginButton
   }()
   
-  var coordinator: Coordinator?
+  let coordinator: Coordinator
+  let sessionManager: SessionManager
+  
+  init(coordinator: Coordinator,
+       sessionManager: SessionManager) {
+    self.coordinator = coordinator
+    self.sessionManager = sessionManager
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -71,8 +85,8 @@ class LoginViewController: UIViewController {
     setupButton()
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
     toggleLoginButtonEnablement()
   }
   
@@ -86,7 +100,16 @@ class LoginViewController: UIViewController {
   
   @objc func loginButtonTapped(_ button: UIButton) {
     dismissKeyboard()
-    coordinator?.show(screen: .articles)
+    guard let username = usernameTextField.text,
+          let password = passwordTextField.text else { return }
+    Task {
+      do {
+        try await sessionManager.login(username: username, password: password)
+        coordinator.show(screen: .articles)
+      } catch {
+        print(error)
+      }
+    }
   }
   
   @objc func dismissKeyboard() {
@@ -121,7 +144,7 @@ private extension LoginViewController {
   func setupTextFields() {
     containerView.translatesAutoresizingMaskIntoConstraints = false
     scrollView.addSubview(containerView)
-    containerView.addArrangedSubview(userNameTextField)
+    containerView.addArrangedSubview(usernameTextField)
     containerView.addArrangedSubview(passwordTextField)
     containerView.heightAnchor.constraint(equalToConstant: 100).isActive = true
     containerView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20).isActive = true
@@ -138,6 +161,6 @@ private extension LoginViewController {
   }
   
   func toggleLoginButtonEnablement() {
-    loginButton.isEnabled = userNameTextField.text?.isEmpty == false &&  passwordTextField.text?.isEmpty == false
+    loginButton.isEnabled = usernameTextField.text?.isEmpty == false &&  passwordTextField.text?.isEmpty == false
   }
 }

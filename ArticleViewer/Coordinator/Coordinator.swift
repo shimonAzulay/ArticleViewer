@@ -15,11 +15,16 @@ protocol Coordinator {
 
 class AppCoordinator: Coordinator {
   var navigationController: UINavigationController?
+  let sessionManager: SessionManager
+  
+  init(sessionManager: SessionManager) {
+    self.sessionManager = sessionManager
+  }
   
   func show(screen: AppScreen) {
     DispatchQueue.main.async { [weak self] in
       guard let self else { return }
-      let vc = screen.make(withCoordinator: self)
+      let vc = self.make(screen)
       self.navigationController?.setViewControllers([vc], animated: true)
     }
   }
@@ -27,8 +32,27 @@ class AppCoordinator: Coordinator {
   func push(screen: AppScreen) {
     DispatchQueue.main.async { [weak self] in
       guard let self else { return }
-      let vc = screen.make(withCoordinator: self)
+      let vc = self.make(screen)
       self.navigationController?.pushViewController(vc, animated: true)
+    }
+  }
+}
+
+private extension AppCoordinator {
+  func make(_ screen: AppScreen) -> UIViewController {
+    switch screen {
+    case .login:
+      let vc = LoginViewController(coordinator: self,
+                                   sessionManager: sessionManager)
+      return vc
+    case .articles:
+      let vc = ArticlesViewController(coordinator: self,
+                                      sessionManager: sessionManager)
+      return vc
+    case .article(let article):
+      let vc = ArticleViewController(article: article,
+                                     sessionManager: sessionManager)
+      return vc
     }
   }
 }

@@ -114,9 +114,8 @@ private extension ArticleTableViewCell {
   
   func populate() {
     guard let article else { return }
-    articleImage.image = UIImage(named: "loginScreenImage")
     articleTitle.text = article.title
     articleDescription.text = article.summary
-    articleDate.text = article.date.asString
+    articleDate.text = article.date
   }
 }

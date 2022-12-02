@@ -7,21 +7,16 @@
 
 import Foundation
 
-struct Article {
-  static var dateFormatter: DateFormatter = {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd/MM/YY"
-    return dateFormatter
-  }()
-  
+struct Article: Decodable {
+  let id: Int
   let title: String
   let summary: String
-  let description: String
-  let date: Date
+  let date: String
 }
 
-extension Date {
-  var asString: String {
-    Article.dateFormatter.string(from: self)
-  }
+struct ArticleDetail: Decodable {
+  let title: String
+  let summary: String
+  let date: String
+  let content: String
 }
