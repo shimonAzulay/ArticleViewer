@@ -8,16 +8,16 @@
 import Foundation
 
 protocol KeychainManager {
-  func save<V: Encodable>(encodable: V, service: String, account: String) -> Bool
+  func save<V: Encodable>(encodable: V, service: String, account: String)
   func read<T: Decodable>(service: String, account: String) -> T?
   func delete(service: String, account: String)
 }
 
 /// Reference for this code can be found here:  https://swiftsenpai.com/development/persist-data-using-keychain/
 class AppKeychainManager: KeychainManager {
-  func save<V: Encodable>(encodable: V, service: String, account: String) -> Bool {
+  func save<V: Encodable>(encodable: V, service: String, account: String) {
     guard let data = try? JSONEncoder().encode(encodable) else {
-      return false
+      return
     }
     
     let query = [
@@ -28,11 +28,6 @@ class AppKeychainManager: KeychainManager {
     ] as CFDictionary
     
     let status = SecItemAdd(query, nil)
-    
-    if status != errSecSuccess {
-      print("Error: \(status)")
-      return false
-    }
     
     if status == errSecDuplicateItem {
       let query = [
@@ -46,7 +41,9 @@ class AppKeychainManager: KeychainManager {
       SecItemUpdate(query, attributesToUpdate)
     }
     
-    return true
+    if status != errSecSuccess {
+      print("Failed to save to keychain: \(status)")
+    }
   }
   
   func read<T: Decodable>(service: String, account: String) -> T? {

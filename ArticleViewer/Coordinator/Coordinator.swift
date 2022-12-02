@@ -24,7 +24,7 @@ class AppCoordinator: Coordinator {
   func show(screen: AppScreen) {
     DispatchQueue.main.async { [weak self] in
       guard let self else { return }
-      let vc = self.make(screen)
+      guard let vc = self.make(screen) else { return }
       self.navigationController?.setViewControllers([vc], animated: true)
     }
   }
@@ -32,14 +32,14 @@ class AppCoordinator: Coordinator {
   func push(screen: AppScreen) {
     DispatchQueue.main.async { [weak self] in
       guard let self else { return }
-      let vc = self.make(screen)
+      guard let vc = self.make(screen) else { return }
       self.navigationController?.pushViewController(vc, animated: true)
     }
   }
 }
 
 private extension AppCoordinator {
-  func make(_ screen: AppScreen) -> UIViewController {
+  func make(_ screen: AppScreen) -> UIViewController? {
     switch screen {
     case .login:
       let vc = LoginViewController(coordinator: self,
@@ -50,8 +50,11 @@ private extension AppCoordinator {
                                       sessionManager: sessionManager)
       return vc
     case .article(let article):
-      let vc = ArticleViewController(article: article,
-                                     sessionManager: sessionManager)
+      guard let articleId = article.id else { return nil }
+      let vc = ArticleViewController(coordinator: self,
+                                     sessionManager: sessionManager,
+                                     articleId: articleId,
+                                     articleTitle: article.title)
       return vc
     }
   }

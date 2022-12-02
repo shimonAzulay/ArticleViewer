@@ -8,15 +8,9 @@
 import Foundation
 
 struct Article: Decodable {
-  let id: Int
+  let id: Int?
   let title: String
   let summary: String
   let date: String
-}
-
-struct ArticleDetail: Decodable {
-  let title: String
-  let summary: String
-  let date: String
-  let content: String
+  let content: String?
 }

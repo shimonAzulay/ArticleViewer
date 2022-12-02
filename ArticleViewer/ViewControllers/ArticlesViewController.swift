@@ -8,6 +8,12 @@
 import UIKit
 
 class ArticlesViewController: UIViewController {
+  private lazy var activityIndicator: UIActivityIndicatorView = {
+    let activityIndicator = UIActivityIndicatorView()
+    activityIndicator.style = .large
+    return activityIndicator
+  }()
+  
   private lazy var articleTableView: UITableView = {
     UITableView()
   }()
@@ -20,6 +26,8 @@ class ArticlesViewController: UIViewController {
   private var articles = [Article]() {
     didSet {
       DispatchQueue.main.async { [weak self] in
+        self?.activityIndicator.stopAnimating()
+        self?.activityIndicator.isHidden = true
         self?.articleTableView.reloadData()
       }
     }
@@ -45,17 +53,8 @@ class ArticlesViewController: UIViewController {
     navigationItem.rightBarButtonItem  = logoutButton
     view.backgroundColor = .white
     setupTableView()
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    Task { [weak self] in
-      do {
-        self?.articles = try await sessionManager.fetchArticles()
-      } catch {
-        print(error)
-      }
-    }
+    setupActivityIndicator()
+    fetchArticles()
   }
   
   @objc func logoutButtonTapped() {
@@ -76,6 +75,31 @@ private extension ArticlesViewController {
     articleTableView.delegate = self
     articleTableView.dataSource = self
   }
+  
+  func setupActivityIndicator() {
+    view.addSubview(activityIndicator)
+    activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+    activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+    activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+    activityIndicator.startAnimating()
+  }
+  
+  func fetchArticles() {
+    Task { [weak self] in
+      do {
+        self?.articles = try await sessionManager.fetchArticles()
+      } catch {
+        if let networkManagerError = error as? NetworkManagerError,
+           networkManagerError == NetworkManagerError.unauthenticated {
+          sessionManager.logout()
+          coordinator.show(screen: .login)
+          return
+        }
+        
+        print(error)
+      }
+    }
+  }
 }
 
 extension ArticlesViewController: UITableViewDelegate {
@@ -93,7 +117,8 @@ extension ArticlesViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let article = articles[indexPath.row]
     
-    guard let reusedArticleCell = tableView.dequeueReusableCell(withIdentifier: ArticleTableViewCell.identifier, for: indexPath) as? ArticleTableViewCell else {
+    guard let reusedArticleCell = tableView.dequeueReusableCell(withIdentifier: ArticleTableViewCell.identifier,
+                                                                for: indexPath) as? ArticleTableViewCell else {
       let articleCell = ArticleTableViewCell()
       articleCell.article = article
       return articleCell

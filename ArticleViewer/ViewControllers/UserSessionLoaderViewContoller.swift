@@ -49,9 +49,7 @@ class UserSessionLoaderViewContoller: UIViewController {
   }
   
   override func viewWillDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
+    super.viewWillDisappear(animated)
     activityIndicator.stopAnimating()
   }
-  
-  
 }

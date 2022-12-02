@@ -12,7 +12,7 @@ protocol SessionManager {
   func retriveSession() -> Bool
   func login(username: String, password: String) async throws
   func fetchArticles() async throws -> [Article]
-  func fetchArticleDetails(articleId: Int) async throws -> ArticleDetail
+  func fetchArticleDetails(articleId: Int) async throws -> Article
   func logout()
 }
 
@@ -59,7 +59,7 @@ class ArticleViewerSessionManager: SessionManager {
     }
   }
   
-  func fetchArticleDetails(articleId: Int) async throws -> ArticleDetail {
+  func fetchArticleDetails(articleId: Int) async throws -> Article {
     try await withCheckedThrowingContinuation { [weak self] continuation in
       var cancellable: AnyCancellable?
       cancellable = self?.networkManager.publisher(endpoint: ArticleViewerEndpoint.article(id: articleId), token: loginDetails?.accessToken)
@@ -71,7 +71,7 @@ class ArticleViewerSessionManager: SessionManager {
             continuation.resume(throwing: error)
           }
           cancellable?.cancel()
-        } receiveValue: { (response: ArticleDetail) in
+        } receiveValue: { (response: Article) in
           continuation.resume(with: .success(response))
         }
     }

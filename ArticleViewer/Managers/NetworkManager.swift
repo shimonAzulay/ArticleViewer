@@ -20,8 +20,10 @@ protocol Endpoint {
 
 enum NetworkManagerError: Error {
   case invalidEndpoint
-  case badResponse
   case invalidResponse
+  case badResponse
+  case unauthenticated
+  case general
 }
 
 protocol NetworkManager {
@@ -109,21 +111,36 @@ class ArticleViewerNetworkManager: NetworkManager {
     return URLSession.shared.dataTaskPublisher(for: request)
       .subscribe(on: DispatchQueue.global(qos: .userInitiated))
       .tryMap { element -> Data in
-        guard let httpResponse = element.response as? HTTPURLResponse,
-              (200..<300) ~= httpResponse.statusCode else {
+        guard let httpResponse = element.response as? HTTPURLResponse else {
+          throw URLError(.cannotParseResponse)
+        }
+        guard httpResponse.statusCode != 401 else {
+          throw URLError(.userAuthenticationRequired)
+        }
+        
+        guard (200..<300) ~= httpResponse.statusCode else {
           throw URLError(.badServerResponse)
         }
+        
         return element.data
       }
       .decode(type: RESPONSE.self, decoder: JSONDecoder())
       .mapError { error -> NetworkManagerError in
-        guard ((error as? URLError) == nil) else {
-          return .badResponse
+        if let error = error as? URLError {
+          switch error.code {
+          case .userAuthenticationRequired:
+            return .unauthenticated
+          case .badServerResponse:
+            return .badResponse
+          case .cannotParseResponse:
+            return .invalidResponse
+          default:
+            return .general
+          }
         }
         
         return .invalidResponse
       }
-    
       .eraseToAnyPublisher()
   }
   

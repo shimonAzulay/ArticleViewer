@@ -28,8 +28,9 @@ class ArticleViewController: UIViewController {
     return imageView
   }()
   
-  private lazy var articleTitle: UILabel = {
+  private lazy var articleTitleLabel: UILabel = {
     let articleTitle = UILabel()
+    articleTitle.numberOfLines = 0
     articleTitle.lineBreakMode = .byWordWrapping
     articleTitle.font = .boldSystemFont(ofSize: 15)
     return articleTitle
@@ -50,8 +51,8 @@ class ArticleViewController: UIViewController {
     articleDescription.font = .systemFont(ofSize: 15)
     return articleDescription
   }()
-  
-  var articleContent: String? {
+    
+  var article: Article? {
     didSet {
       DispatchQueue.main.async { [weak self] in
         self?.populate()
@@ -59,13 +60,19 @@ class ArticleViewController: UIViewController {
     }
   }
   
-  let article: Article
+  let coordinator: Coordinator
   let sessionManager: SessionManager
+  var articleTitle: String?
+  let articleId: Int
   
-  init(article: Article,
-       sessionManager: SessionManager) {
-    self.article = article
+  init(coordinator: Coordinator,
+       sessionManager: SessionManager,
+       articleId: Int,
+       articleTitle: String?) {
+    self.coordinator = coordinator
     self.sessionManager = sessionManager
+    self.articleId = articleId
+    self.articleTitle = articleTitle
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -75,7 +82,7 @@ class ArticleViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    navigationItem.title = article.title
+    navigationItem.title = articleTitle
     view.backgroundColor = .white
     setup()
   }
@@ -84,10 +91,15 @@ class ArticleViewController: UIViewController {
     super.viewWillAppear(animated)
     Task { [weak self] in
       do {
-        let articleDetails = try await sessionManager.fetchArticleDetails(articleId: article.id)
-        self?.articleContent = articleDetails.content
+        self?.article = try await sessionManager.fetchArticleDetails(articleId: articleId)
       } catch {
-        print(error)
+        if let networkManagerError = error as? NetworkManagerError,
+           networkManagerError == NetworkManagerError.unauthenticated {
+          sessionManager.logout()
+          coordinator.show(screen: .login)
+          return
+        }
+        
       }
     }
   }
@@ -110,15 +122,15 @@ private extension ArticleViewController {
     containerView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9).isActive = true
     
     containerView.addArrangedSubview(articleImage)
-    containerView.addArrangedSubview(articleTitle)
+    containerView.addArrangedSubview(articleTitleLabel)
     containerView.addArrangedSubview(articleDate)
     containerView.addArrangedSubview(articleDescription)
   }
   
   func populate() {
-    guard let articleContent else { return }
-    articleTitle.text = article.title
+    guard let article else { return }
+    articleTitleLabel.text = article.title
     articleDate.text = article.date
-    articleDescription.text = articleContent
+    articleDescription.text = article.content
   }
 }
