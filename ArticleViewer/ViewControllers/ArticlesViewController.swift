@@ -35,11 +35,14 @@ class ArticlesViewController: UIViewController {
   
   let coordinator: Coordinator
   let sessionManager: SessionManager
+  let imageFetcher: ImageDataFetcher
   
   init(coordinator: Coordinator,
-       sessionManager: SessionManager) {
+       sessionManager: SessionManager,
+       imageFetcher: ImageDataFetcher) {
     self.coordinator = coordinator
     self.sessionManager = sessionManager
+    self.imageFetcher = imageFetcher
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -116,15 +119,13 @@ extension ArticlesViewController: UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let article = articles[indexPath.row]
-    
-    guard let reusedArticleCell = tableView.dequeueReusableCell(withIdentifier: ArticleTableViewCell.identifier,
-                                                                for: indexPath) as? ArticleTableViewCell else {
-      let articleCell = ArticleTableViewCell()
-      articleCell.article = article
-      return articleCell
+    var articleCell = ArticleTableViewCell()
+    if let reusedArticleCell = tableView.dequeueReusableCell(withIdentifier: ArticleTableViewCell.identifier,
+                                                             for: indexPath) as? ArticleTableViewCell {
+      articleCell = reusedArticleCell
     }
 
-    reusedArticleCell.article = article
-    return reusedArticleCell
+    articleCell.update(article: article, imageFetcher: imageFetcher)
+    return articleCell
   }
 }

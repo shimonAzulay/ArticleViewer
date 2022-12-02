@@ -57,20 +57,25 @@ class ArticleViewController: UIViewController {
       DispatchQueue.main.async { [weak self] in
         self?.populate()
       }
+      
+      fetchImage()
     }
   }
   
   let coordinator: Coordinator
   let sessionManager: SessionManager
+  let imageFetcher: ImageDataFetcher
   var articleTitle: String?
   let articleId: Int
   
   init(coordinator: Coordinator,
        sessionManager: SessionManager,
+       imageFetcher: ImageDataFetcher,
        articleId: Int,
        articleTitle: String?) {
     self.coordinator = coordinator
     self.sessionManager = sessionManager
+    self.imageFetcher = imageFetcher
     self.articleId = articleId
     self.articleTitle = articleTitle
     super.init(nibName: nil, bundle: nil)
@@ -132,5 +137,17 @@ private extension ArticleViewController {
     articleTitleLabel.text = article.title
     articleDate.text = article.date
     articleDescription.text = article.content
+  }
+  
+  func fetchImage() {
+    guard let imageUrl = article?.image else { return }
+    Task { @MainActor [weak self] in
+      do {
+        let imageData = try await imageFetcher.fetchImage(url: imageUrl)
+        self?.articleImage.image = UIImage(data: imageData)
+      } catch {
+        print(error)
+      }
+    }
   }
 }

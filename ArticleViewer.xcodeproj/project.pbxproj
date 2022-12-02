@@ -24,6 +24,7 @@
 		9FBCC68A2939F05F00188856 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC6892939F05F00188856 /* Login.swift */; };
 		9FBCC68C293A30F300188856 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC68B293A30F300188856 /* KeychainManager.swift */; };
 		9FBCC68E293A3BFF00188856 /* UserSessionLoaderViewContoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC68D293A3BFF00188856 /* UserSessionLoaderViewContoller.swift */; };
+		9FBCC690293AAB4D00188856 /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBCC68F293AAB4D00188856 /* ImageFetcher.swift */; };
 		9FDD3EC3293929470023C8EC /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDD3EC2293929470023C8EC /* Article.swift */; };
 		9FDD3EC5293929FC0023C8EC /* ArticleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDD3EC4293929FC0023C8EC /* ArticleTableViewCell.swift */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,7 @@
 		9FBCC6892939F05F00188856 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		9FBCC68B293A30F300188856 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		9FBCC68D293A3BFF00188856 /* UserSessionLoaderViewContoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionLoaderViewContoller.swift; sourceTree = "<group>"; };
+		9FBCC68F293AAB4D00188856 /* ImageFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFetcher.swift; sourceTree = "<group>"; };
 		9FDD3EC2293929470023C8EC /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		9FDD3EC4293929FC0023C8EC /* ArticleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -185,6 +187,7 @@
 				9FBCC6822939DAD100188856 /* SessionManager.swift */,
 				9FBCC6842939DADE00188856 /* NetworkManager.swift */,
 				9FBCC68B293A30F300188856 /* KeychainManager.swift */,
+				9FBCC68F293AAB4D00188856 /* ImageFetcher.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				9FBCC68A2939F05F00188856 /* Login.swift in Sources */,
 				9F0BFE762938F33B002E2C8D /* SceneDelegate.swift in Sources */,
 				9FDD3EC3293929470023C8EC /* Article.swift in Sources */,
+				9FBCC690293AAB4D00188856 /* ImageFetcher.swift in Sources */,
 				9F4A04CE2938F9EF00FEE562 /* ArticlesViewController.swift in Sources */,
 				9F4A04CC2938F9BB00FEE562 /* LoginViewController.swift in Sources */,
 				9FBCC6832939DAD100188856 /* SessionManager.swift in Sources */,

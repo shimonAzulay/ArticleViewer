@@ -26,7 +26,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let networkManager = ArticleViewerNetworkManager()
     let sessionManager = ArticleViewerSessionManager(networkManager: networkManager,
                                                      keychainManager: keychainManager)
-    let coordinator = AppCoordinator(sessionManager: sessionManager)
+    let coordinator = AppCoordinator(sessionManager: sessionManager,
+                                     imageFetcher: AppImageDataFetcher())
     let rootVC = UserSessionLoaderViewContoller(coordinator: coordinator,
                                                 sessionManager: sessionManager)
     let rootNC = UINavigationController(rootViewController: rootVC)

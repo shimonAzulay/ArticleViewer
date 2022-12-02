@@ -9,14 +9,6 @@ import UIKit
 
 class ArticleTableViewCell: UITableViewCell {
   static let identifier = "ArticleTableViewCell"
-  var article: Article? {
-    didSet {
-      DispatchQueue.main.async { [weak self] in
-        self?.populate()
-      }
-    }
-  }
-  
   private lazy var sideDetailsContainerView: UIView = {
     UIView()
   }()
@@ -54,6 +46,17 @@ class ArticleTableViewCell: UITableViewCell {
     return articleDescription
   }()
   
+  private var imageFetcher: ImageDataFetcher?
+  private var article: Article? {
+    didSet {
+      DispatchQueue.main.async { [weak self] in
+        self?.populate()
+      }
+      
+      fetchImage()
+    }
+  }
+  
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupView()
@@ -71,6 +74,11 @@ class ArticleTableViewCell: UITableViewCell {
     articleDate.text = nil
     articleTitle.text = nil
     articleDescription.text = nil
+  }
+  
+  func update(article: Article, imageFetcher: ImageDataFetcher) {
+    self.imageFetcher = imageFetcher
+    self.article = article
   }
 }
 
@@ -129,5 +137,18 @@ private extension ArticleTableViewCell {
     articleTitle.text = article.title
     articleDescription.text = article.summary
     articleDate.text = article.date
+  }
+  
+  func fetchImage() {
+    guard let imageUrl = article?.thumbnail,
+          let imageFetcher else { return }
+    Task { @MainActor [weak self] in
+      do {
+        let imageData = try await imageFetcher.fetchImage(url: imageUrl)
+        self?.articleImage.image = UIImage(data: imageData)
+      } catch {
+        print(error)
+      }
+    }
   }
 }

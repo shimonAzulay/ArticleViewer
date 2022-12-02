@@ -16,9 +16,12 @@ protocol Coordinator {
 class AppCoordinator: Coordinator {
   var navigationController: UINavigationController?
   let sessionManager: SessionManager
+  let imageFetcher: ImageDataFetcher
   
-  init(sessionManager: SessionManager) {
+  init(sessionManager: SessionManager,
+       imageFetcher: ImageDataFetcher) {
     self.sessionManager = sessionManager
+    self.imageFetcher = imageFetcher
   }
   
   func show(screen: AppScreen) {
@@ -47,12 +50,14 @@ private extension AppCoordinator {
       return vc
     case .articles:
       let vc = ArticlesViewController(coordinator: self,
-                                      sessionManager: sessionManager)
+                                      sessionManager: sessionManager,
+                                      imageFetcher: imageFetcher)
       return vc
     case .article(let article):
       guard let articleId = article.id else { return nil }
       let vc = ArticleViewController(coordinator: self,
                                      sessionManager: sessionManager,
+                                     imageFetcher: imageFetcher,
                                      articleId: articleId,
                                      articleTitle: article.title)
       return vc
