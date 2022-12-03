@@ -59,13 +59,12 @@ class ArticleTableViewCell: UITableViewCell {
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
-    setupView()
-    setupSideDetails()
-    setupTexts()
+    commonInit()
   }
   
   required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
+    super.init(coder: aDecoder)
+    commonInit()
   }
   
   override func prepareForReuse() {
@@ -83,8 +82,15 @@ class ArticleTableViewCell: UITableViewCell {
 }
 
 private extension ArticleTableViewCell {
+  func commonInit() {
+    selectionStyle = .none
+    setupView()
+    setupSideDetails()
+    setupTexts()
+  }
+  
   func setupView() {
-    contentView.backgroundColor = .white
+    contentView.backgroundColor = .clear
   }
   
   func setupSideDetails() {
