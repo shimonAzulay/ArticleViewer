@@ -16,17 +16,20 @@ protocol ImageDataFetcher {
 }
 
 actor ImageDataCache {
-  private var cache = [String: Data]()
+  private var cache = NSCache<NSString, NSData>()
   
   func getItem(forKey key: String) -> Data? {
-    cache[key]
+    let nskey = key as NSString
+    guard let nsdata = cache.object(forKey: nskey) else { return nil }
+    return Data(referencing: nsdata)
   }
 
   func setItem(forKey key: String, item: Data) {
-    cache[key] = item
+    let nskey = key as NSString
+    let nsitem = item as NSData
+    cache.setObject(nsitem, forKey: nskey)
   }
 }
-
 
 class AppImageDataFetcher: ImageDataFetcher {
   let cache = ImageDataCache()

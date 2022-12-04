@@ -22,6 +22,7 @@ class ArticleTableViewCell: UITableViewCell {
   private lazy var articleDate: UILabel = {
     let articleDate = UILabel()
     articleDate.textAlignment = .center
+    articleDate.numberOfLines = 0
     articleDate.lineBreakMode = .byWordWrapping
     articleDate.font = .systemFont(ofSize: 12)
     return articleDate
@@ -34,6 +35,7 @@ class ArticleTableViewCell: UITableViewCell {
   private lazy var articleTitle: UILabel = {
     let articleTitle = UILabel()
     articleTitle.lineBreakMode = .byWordWrapping
+    articleTitle.numberOfLines = 0
     articleTitle.font = .systemFont(ofSize: 18)
     return articleTitle
   }()
@@ -49,10 +51,7 @@ class ArticleTableViewCell: UITableViewCell {
   private var imageFetcher: ImageDataFetcher?
   private var article: Article? {
     didSet {
-      DispatchQueue.main.async { [weak self] in
-        self?.populate()
-      }
-      
+      populate()
       fetchImage()
     }
   }
