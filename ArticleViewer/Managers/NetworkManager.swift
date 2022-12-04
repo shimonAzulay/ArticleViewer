@@ -18,12 +18,26 @@ protocol Endpoint {
   func makeRequest<PAYLOAD: Encodable>(with payload: PAYLOAD?, token: String?) -> URLRequest?
 }
 
-enum NetworkManagerError: Error {
+enum NetworkManagerError: Error, CustomStringConvertible {
   case invalidEndpoint
   case invalidResponse
   case badResponse
   case unauthenticated
   case general
+  
+  var description: String {
+    switch self {
+    case .invalidEndpoint:
+      return "Invalid endpoint"
+    case .invalidResponse, .badResponse:
+      return "Invalid response"
+    case .unauthenticated:
+      return "Unauthenticated"
+    case .general:
+      return "Unknown"
+    }
+  }
+  
 }
 
 protocol NetworkManager {

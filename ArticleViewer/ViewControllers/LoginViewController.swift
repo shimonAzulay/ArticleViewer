@@ -37,7 +37,6 @@ class LoginViewController: UIViewController {
     let textField = UITextField()
     textField.backgroundColor = .lightGray
     textField.placeholder = "Username"
-    textField.text = "code"
     textField.layer.cornerRadius = 5
     textField.addTarget(self, action: #selector(userNameTextFieldDidEnd), for: .editingChanged)
     return textField
@@ -47,7 +46,6 @@ class LoginViewController: UIViewController {
     let textField = UITextField()
     textField.backgroundColor = .lightGray
     textField.placeholder = "Password"
-    textField.text = "test"
     textField.layer.cornerRadius = 5
     textField.isSecureTextEntry = true
     textField.addTarget(self, action: #selector(passwordTextFieldDidEnd), for: .editingChanged)
@@ -107,7 +105,7 @@ class LoginViewController: UIViewController {
         try await sessionManager.login(username: username, password: password)
         coordinator.show(screen: .articles)
       } catch {
-        print(error)
+        showAlert(withMessage: "\(error)")
       }
     }
   }
@@ -162,5 +160,12 @@ private extension LoginViewController {
   
   func toggleLoginButtonEnablement() {
     loginButton.isEnabled = usernameTextField.text?.isEmpty == false &&  passwordTextField.text?.isEmpty == false
+  }
+  
+  func showAlert(withMessage message: String) {
+    DispatchQueue.main.async { [weak self] in
+      let dialogMessage = UIAlertController(title: "Login Failed", message: message, preferredStyle: .alert)
+      self?.present(dialogMessage, animated: true)
+    }
   }
 }
