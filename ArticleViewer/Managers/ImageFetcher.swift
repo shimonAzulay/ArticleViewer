@@ -16,7 +16,7 @@ protocol ImageDataFetcher {
 }
 
 actor ImageDataCache {
-  private var cache = NSCache<NSString, NSData>()
+  private let cache = NSCache<NSString, NSData>()
   
   func getItem(forKey key: String) -> Data? {
     let nskey = key as NSString

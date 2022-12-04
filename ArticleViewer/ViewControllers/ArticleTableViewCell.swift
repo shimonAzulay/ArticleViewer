@@ -24,6 +24,7 @@ class ArticleTableViewCell: UITableViewCell {
     articleDate.textAlignment = .center
     articleDate.numberOfLines = 0
     articleDate.lineBreakMode = .byWordWrapping
+    articleDate.textColor = .black
     articleDate.font = .systemFont(ofSize: 12)
     return articleDate
   }()
@@ -36,6 +37,7 @@ class ArticleTableViewCell: UITableViewCell {
     let articleTitle = UILabel()
     articleTitle.lineBreakMode = .byWordWrapping
     articleTitle.numberOfLines = 0
+    articleTitle.textColor = .black
     articleTitle.font = .systemFont(ofSize: 18)
     return articleTitle
   }()
@@ -45,6 +47,7 @@ class ArticleTableViewCell: UITableViewCell {
     articleDescription.numberOfLines = 0
     articleDescription.lineBreakMode = .byWordWrapping
     articleDescription.font = .systemFont(ofSize: 15)
+    articleDescription.textColor = .black
     return articleDescription
   }()
   
@@ -89,7 +92,7 @@ private extension ArticleTableViewCell {
   }
   
   func setupView() {
-    contentView.backgroundColor = .clear
+    backgroundColor = .clear
   }
   
   func setupSideDetails() {

@@ -32,6 +32,7 @@ class ArticleViewController: UIViewController {
     let articleTitle = UILabel()
     articleTitle.numberOfLines = 0
     articleTitle.lineBreakMode = .byWordWrapping
+    articleTitle.textColor = .black
     articleTitle.font = .boldSystemFont(ofSize: 15)
     return articleTitle
   }()
@@ -41,6 +42,7 @@ class ArticleViewController: UIViewController {
     articleDate.lineBreakMode = .byWordWrapping
     articleDate.font = .systemFont(ofSize: 12)
     articleDate.textColor = .lightGray
+    articleDate.textColor = .black
     return articleDate
   }()
   
@@ -49,6 +51,7 @@ class ArticleViewController: UIViewController {
     articleDescription.numberOfLines = 0
     articleDescription.lineBreakMode = .byWordWrapping
     articleDescription.font = .systemFont(ofSize: 15)
+    articleDescription.textColor = .black
     return articleDescription
   }()
     

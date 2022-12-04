@@ -16,6 +16,7 @@ class ArticlesViewController: UIViewController {
   
   private lazy var articleTableView: UITableView = {
     let tableView = UITableView()
+    tableView.backgroundColor = .white
     tableView.separatorStyle = .singleLine
     return tableView
   }()

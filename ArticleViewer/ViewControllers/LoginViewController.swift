@@ -38,6 +38,7 @@ class LoginViewController: UIViewController {
     textField.backgroundColor = .lightGray
     textField.placeholder = "Username"
     textField.layer.cornerRadius = 5
+    textField.textColor = .black
     textField.addTarget(self, action: #selector(userNameTextFieldDidEnd), for: .editingChanged)
     return textField
   }()
@@ -47,6 +48,7 @@ class LoginViewController: UIViewController {
     textField.backgroundColor = .lightGray
     textField.placeholder = "Password"
     textField.layer.cornerRadius = 5
+    textField.textColor = .black
     textField.isSecureTextEntry = true
     textField.addTarget(self, action: #selector(passwordTextFieldDidEnd), for: .editingChanged)
     return textField
