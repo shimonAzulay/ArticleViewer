@@ -167,6 +167,8 @@ private extension LoginViewController {
   func showAlert(withMessage message: String) {
     DispatchQueue.main.async { [weak self] in
       let dialogMessage = UIAlertController(title: "Login Failed", message: message, preferredStyle: .alert)
+      let cancelAction = UIAlertAction(title: "OK", style: .cancel)
+      dialogMessage.addAction(cancelAction)
       self?.present(dialogMessage, animated: true)
     }
   }
