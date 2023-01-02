@@ -157,5 +157,4 @@ class ArticleViewerNetworkManager: NetworkManager {
       }
       .eraseToAnyPublisher()
   }
-  
 }
